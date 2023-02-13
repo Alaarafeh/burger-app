@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie';
+
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -14,7 +16,14 @@ const Login = () => {
 				password,
 			})
 		})
-			.catch((err) => console.error(err));
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.token)
+            sessionStorage.setItem('token', data.token);
+            Cookies.set('token', data.token)
+            console.log(sessionStorage.getItem('token'))
+        })
+		.catch((err) => console.error(err));
 	};
 
     const handleSubmit = (e) => {
