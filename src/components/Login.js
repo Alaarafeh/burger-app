@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Cookies from 'js-cookie';
-
+import { useCookies } from 'react-cookie'
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
     const navigate = useNavigate();
+    const [, setCookie] = useCookies(['access_token'])
+
 
     const postLoginDetails = () => {
 		fetch("http://localhost:8080/login", {
@@ -19,9 +21,9 @@ const Login = () => {
         .then(response => response.json())
         .then(data => {
             console.log(data.token)
-            sessionStorage.setItem('token', data.token);
-            Cookies.set('token', data.token)
-            console.log(sessionStorage.getItem('token'))
+            setCookie('access_token', data.token)
+        
+            navigate("/dashboard");
         })
 		.catch((err) => console.error(err));
 	};
